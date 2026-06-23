@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<title>観光UGC分析レポート — 調布</title>
+<style>
+  body { font-family: "Yu Gothic","Hiragino Sans",sans-serif; color:#222; max-width:980px;
+          margin:0 auto; padding:32px 24px; line-height:1.7; }
+  h1 { color:#1F4E66; border-bottom:3px solid #1F4E66; padding-bottom:8px; }
+  h2 { color:#1F4E66; margin-top:36px; border-left:6px solid #2E6E8E; padding-left:10px; }
+  h3 { color:#2E6E8E; margin-top:22px; }
+  .meta { color:#666; font-size:13px; }
+  .cards { display:flex; flex-wrap:wrap; gap:14px; margin:16px 0; }
+  .card { flex:1; min-width:150px; background:#F2F6F8; border-radius:8px; padding:14px 16px; }
+  .card .k { font-size:12px; color:#567; }
+  .card .v { font-size:24px; font-weight:bold; color:#1F4E66; }
+  table { border-collapse:collapse; width:100%; margin:10px 0 4px; font-size:14px; }
+  th,td { border:1px solid #D6E0E6; padding:7px 9px; text-align:left; vertical-align:top; }
+  th { background:#1F4E66; color:#fff; font-weight:600; }
+  tr:nth-child(even) td { background:#F7FAFC; }
+  td.num { text-align:right; white-space:nowrap; }
+  td.title { max-width:360px; }
+  .bar-wrap { position:relative; background:#E8EEF2; border-radius:4px; height:18px; min-width:120px; }
+  .bar { height:18px; border-radius:4px; }
+  .bar-val { position:absolute; right:6px; top:0; font-size:11px; color:#333; line-height:18px; }
+  .flag { background:#FFE0B2; color:#8A5A00; font-size:11px; padding:1px 6px; border-radius:8px; }
+  .note { color:#777; font-size:12.5px; margin:4px 0; }
+  .insights { background:#E8F2E8; border-left:6px solid #2E7D32; padding:12px 16px 12px 28px; border-radius:6px; }
+  .insights li { margin:6px 0; }
+  .disclaimer { background:#FFF6E5; border-left:6px solid #E69500; padding:10px 16px; border-radius:6px;
+                 font-size:12.5px; color:#6b5300; margin-top:30px; }
+</style></head><body>
+
+<h1>観光UGC分析レポート</h1>
+<p class="meta">対象観光地：<b>調布</b>　/　データ源：YouTube Data API　/
+収集期間：直近12ヶ月　/　生成日時：2026-06-22 22:59</p>
+
+<h2>1. 現状サマリ</h2>
+<div class="cards">
+  <div class="card"><div class="k">収集動画数</div><div class="v">76</div></div>
+  <div class="card"><div class="k">総再生数</div><div class="v">902,000</div></div>
+  <div class="card"><div class="k">平均エンゲージメント</div><div class="v">111</div></div>
+  <div class="card"><div class="k">平均エンゲージ率</div><div class="v">4.66%</div></div>
+</div>
+<p class="note">エンゲージメント＝いいね＋コメント。率＝エンゲージメント÷登録者数 （率算出 76/76件・登録者数非公開は除外）。</p>
+<p>言語構成：日本語圏 72件、中国語圏 4件</p>
+
+<h2>2. 反応の良い市場・地域（セグメント）</h2>
+<h3>言語別（主軸）</h3><table><thead><tr><th>セグメント</th><th>件数</th><th>平均エンゲージメント</th><th>平均エンゲージ率</th><th>主な話題</th></tr></thead><tbody><tr><td>ja（日本語圏） </td><td class='num'>72</td><td><div class="bar-wrap"><div class="bar" style="width:100.0%;background:#2E6E8E"></div><span class="bar-val">117</span></div></td><td class='num'>4.88%</td><td>食・グルメ、文化・寺社、自然・景観</td></tr><tr><td>zh（中国語圏） </td><td class='num'>4</td><td><div class="bar-wrap"><div class="bar" style="width:12.6%;background:#2E6E8E"></div><span class="bar-val">15</span></div></td><td class='num'>0.78%</td><td>文化・寺社</td></tr></tbody></table>
+<h3>市場まとめ区分</h3><table><thead><tr><th>セグメント</th><th>件数</th><th>平均エンゲージメント</th><th>平均エンゲージ率</th><th>主な話題</th></tr></thead><tbody><tr><td>日本語圏 </td><td class='num'>72</td><td><div class="bar-wrap"><div class="bar" style="width:100.0%;background:#2E6E8E"></div><span class="bar-val">117</span></div></td><td class='num'>4.88%</td><td>食・グルメ、文化・寺社、自然・景観</td></tr><tr><td>中国語圏 </td><td class='num'>4</td><td><div class="bar-wrap"><div class="bar" style="width:12.6%;background:#2E6E8E"></div><span class="bar-val">15</span></div></td><td class='num'>0.78%</td><td>文化・寺社</td></tr></tbody></table>
+<h3>推定地域別（従・自己申告ベース）</h3><p class="note">地域は発信者の自己申告であり、視聴者の地域ではありません。空欄は『不明』として参考値扱いです。</p><table><thead><tr><th>セグメント</th><th>件数</th><th>平均エンゲージメント</th><th>平均エンゲージ率</th><th>主な話題</th></tr></thead><tbody><tr><td>JP </td><td class='num'>39</td><td><div class="bar-wrap"><div class="bar" style="width:100.0%;background:#2E6E8E"></div><span class="bar-val">189</span></div></td><td class='num'>1.69%</td><td>食・グルメ、文化・寺社、自然・景観</td></tr><tr><td>地域不明 </td><td class='num'>33</td><td><div class="bar-wrap"><div class="bar" style="width:16.5%;background:#2E6E8E"></div><span class="bar-val">31</span></div></td><td class='num'>8.65%</td><td>食・グルメ、文化・寺社、自然・景観</td></tr><tr><td>TW </td><td class='num'>4</td><td><div class="bar-wrap"><div class="bar" style="width:7.8%;background:#2E6E8E"></div><span class="bar-val">15</span></div></td><td class='num'>0.78%</td><td>文化・寺社</td></tr></tbody></table>
+
+<h3>言語 × 推定地域 クロス集計</h3>
+<table><thead><tr><th>言語</th><th>推定地域</th><th>件数</th><th>平均エンゲージメント</th><th>信頼度</th></tr></thead>
+<tbody><tr><td>ja</td><td>JP</td><td class='num'>39</td><td class='num'>189</td><td></td></tr><tr><td>ja</td><td>不明</td><td class='num'>33</td><td class='num'>31</td><td></td></tr><tr><td>zh</td><td>TW</td><td class='num'>4</td><td class='num'>15</td><td></td></tr></tbody></table>
+
+<h2>3. 人気コンテンツ（エンゲージメント上位）</h2>
+<table><thead><tr><th>タイトル</th><th>言語/地域</th><th>再生数</th><th>エンゲージ</th>
+<th>エンゲージ率</th><th>話題</th></tr></thead>
+<tbody><tr><td class='title'>【閉鎖･焼失】多摩地区の消えた観光地TOP10(立川、調布、八王子、日野、青梅、小金井、あきる野など)</td><td>ja/JP</td><td class='num'>427,621</td><td class='num'>3,577</td><td class='num'>3.25%</td><td>—</td></tr><tr><td class='title'>【多摩の人気グルメ】ランキングTOP11(八王子、立川、町田、府中、武蔵野市、調布など)</td><td>ja/JP</td><td class='num'>218,181</td><td class='num'>2,369</td><td class='num'>2.15%</td><td>食・グルメ</td></tr><tr><td class='title'>【深大寺食べ歩き】#深大寺#深大寺食べ歩き#食べ歩き#グルメvlog#午後のグルメ#グルメ女子#蕎麦#東京グルメ#調布グルメ#gourmet#japanesefood#飯テロ</td><td>ja/JP</td><td class='num'>31,500</td><td class='num'>280</td><td class='num'>6.28%</td><td>食・グルメ、文化・寺社</td></tr><tr><td class='title'>食べログ「調布ラーメンベスト4」。調布市のラーメン店ベスト4をまとめました。どこもすごくレベルが高いです。過去動画を再編集したもの。</td><td>ja/JP</td><td class='num'>31,951</td><td class='num'>226</td><td class='num'>5.02%</td><td>食・グルメ、自然・景観、文化・寺社</td></tr><tr><td class='title'>【🍁伊豆美神社 秋まつり🍁】</td><td>ja/不明</td><td class='num'>2,046</td><td class='num'>182</td><td class='num'>2.42%</td><td>文化・寺社</td></tr><tr><td class='title'>【🍁伊豆美神社 秋まつり🍁】</td><td>ja/不明</td><td class='num'>2,046</td><td class='num'>182</td><td class='num'>2.42%</td><td>文化・寺社</td></tr><tr><td class='title'>元三大師の「深大寺」へ！調布飛行場から/懐かしの深大寺温泉へも♨️【東京都調布市/三鷹市】</td><td>ja/JP</td><td class='num'>3,935</td><td class='num'>161</td><td class='num'>1.41%</td><td>自然・景観、温泉・宿、文化・寺社</td></tr><tr><td class='title'>【深大寺グルメ日帰りVlog🍡】東京・調布！のんびりお団子とお蕎麦とパフェを食べる最高の癒し日帰り旅</td><td>ja/JP</td><td class='num'>5,445</td><td class='num'>127</td><td class='num'>0.86%</td><td>食・グルメ、自然・景観、文化・寺社</td></tr><tr><td class='title'>ここ本当に空港？？？調布飛行場が独特すぎた‼️#調布飛行場 #空港 #小型セスナ #dornier</td><td>ja/JP</td><td class='num'>18,900</td><td class='num'>125</td><td class='num'>2.50%</td><td>—</td></tr><tr><td class='title'>調布市たづくりで樹ノ会展さんに参加 いいだ健一 北多摩3区</td><td>ja/不明</td><td class='num'>1,715</td><td class='num'>117</td><td class='num'>1.56%</td><td>—</td></tr></tbody></table>
+
+<h2>4. 高反応パターン</h2>
+<p class="note">エンゲージメント上位群に偏って多い特徴（再現すべき訴求要素の候補）。</p>
+<table><thead><tr><th>観点</th><th>特徴</th><th>上位群での割合</th><th>全体割合</th><th>偏り(lift)</th><th>判定</th></tr></thead><tbody><tr><td>尺</td><td><b>long(10分〜)</b></td><td class='num'>26%</td><td class='num'>9%</td><td class='num'>2.8倍</td><td>強い偏り</td></tr><tr><td>投稿時期</td><td><b>春(3-5月)</b></td><td class='num'>22%</td><td class='num'>11%</td><td class='num'>2.1倍</td><td>強い偏り</td></tr><tr><td>話題</td><td><b>自然・景観</b></td><td class='num'>21%</td><td class='num'>14%</td><td class='num'>1.5倍</td><td>強い偏り</td></tr></tbody></table>
+
+<h2>5. 示唆と次の手がかり</h2>
+<ul class="insights"><li>反応が最も高い市場は「ja（日本語圏）」で、平均エンゲージメント117。この市場では特に 食・グルメ・文化・寺社・自然・景観 の動画が伸びており、優先ターゲットの候補になります。</li><li>高反応動画では「自然・景観」が上位群の21%（全体比1.5倍）を占めます。プロモーション素材はこの切り口を軸にすると反応が見込めます。</li><li>動画の長さは「long(10分〜)」が高反応群に偏在（全体比2.8倍）。発信設計の参考にできます。</li><li>発信の時期は「春(3-5月)」が高反応群に偏在（全体比2.1倍）。発信設計の参考にできます。</li><li>地域が不明な動画が33件あります（発信者の自己申告が空欄）。地域別の数値は参考値として扱ってください。</li></ul>
+
+<div class="disclaimer">
+  <b>データ取り扱い上の注意（要件 6）：</b>
+  本レポートは公開エンゲージメント（いいね＋コメント）に基づきます。インプレッション・共有数は
+  YouTube APIで第三者投稿について取得できないため扱っていません。エンゲージメント率は登録者数を
+  分母とし、登録者数非公開のチャンネルは率を算出していません。地域は発信者の自己申告に基づく推定値です。
+</div>
+
+</body></html>
