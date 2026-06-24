@@ -127,5 +127,132 @@ def test_parse_duration():
     assert parse_duration("") == 0
 
 def test_relevance_filter():
-    assert is_relevant(mk(title="高山のグルメ"), "高山") is True
-    assert is_relevant(mk(title="京都の寺", tags=[]), "高山") is False
+    assert is_relevant(mk(title="高山のグルメ"), ["高山"]) is True
+    assert is_relevant(mk(title="京都の寺", tags=[]), ["高山"]) is False
+
+
+# ---- コメント分析（視聴者層・感情） -------------------------------------
+def test_viewer_language_aggregation():
+    from youtube_ugc import comments as cm
+    v = mk()
+    v.language = "ja"
+    v.comments = ["美味しそう", "Looks amazing", "好想去", "行きたい"]
+    cm.annotate_viewer_languages([v])
+    assert v.viewer_languages.get("ja", 0) >= 1
+    assert v.viewer_languages.get("en", 0) == 1
+    assert v.viewer_languages.get("zh", 0) == 1
+
+def test_creator_vs_viewer_shows_foreign_interest():
+    from youtube_ugc import comments as cm
+    v = mk()
+    v.language = "ja"  # 発信者は日本語
+    v.comments = ["Amazing!", "好想去", "가고 싶다"]  # 視聴者は外国語
+    cm.annotate_viewer_languages([v])
+    cv = cm.creator_vs_viewer([v])
+    assert cv["creator"].get("ja") == 1
+    assert sum(n for lg, n in cv["viewer"].items() if lg != "ja") >= 3
+
+def test_lexicon_sentiment_positive_negative_neutral():
+    from youtube_ugc.comments import _lexicon_sentiment
+    assert _lexicon_sentiment(["最高でした", "beautiful"]) == "positive"
+    assert _lexicon_sentiment(["高すぎる", "crowded"]) == "negative"
+    assert _lexicon_sentiment(["普通の動画"]) == "neutral"
+    assert _lexicon_sentiment([]) is None
+
+def test_sentiment_summary_counts():
+    from youtube_ugc import comments as cm
+    vids = [mk(vid="a"), mk(vid="b"), mk(vid="c")]
+    vids[0].comments = ["最高！"]
+    vids[1].comments = ["高すぎる"]
+    vids[2].comments = ["普通"]
+    cm.annotate_sentiment(vids, use_llm=False)
+    ss = cm.sentiment_summary(vids)
+    assert ss["positive"] == 1 and ss["negative"] == 1 and ss["neutral"] == 1
+    assert abs(ss["positive_ratio"] - 1/3) < 1e-9
+
+
+# ---- LLM クライアント（ネット非依存の単体検証） -------------------------
+def test_llm_extract_json_from_fenced_text():
+    from youtube_ugc.llm import _extract_json
+    assert _extract_json('ここ: ```json\n{"a": ["x"]}\n```') == {"a": ["x"]}
+    assert _extract_json('[1, 2, 3] 以上') == [1, 2, 3]
+    assert _extract_json("JSONなし") is None
+
+def test_classify_batch_keyword_fallback():
+    from youtube_ugc.topics import classify_batch
+    out = classify_batch([("v1", "高山 ラーメン グルメ"), ("v2", "高山 温泉 旅館")], use_llm=False)
+    assert "食・グルメ" in out["v1"]
+    assert "温泉・宿" in out["v2"]
+
+
+# ---- 多言語の地名（インバウンド対応） -----------------------------------
+def test_resolve_aliases_known_place():
+    from youtube_ugc.config import resolve_aliases
+    al = resolve_aliases("高山")
+    assert "高山" in al and "Takayama" in al and "다카야마" in al
+
+def test_resolve_aliases_unknown_place_with_extra():
+    from youtube_ugc.config import resolve_aliases
+    al = resolve_aliases("無名温泉", ["Mumei Onsen"])
+    assert al == ["無名温泉", "Mumei Onsen"]
+
+def test_resolve_aliases_reverse_lookup_romaji():
+    # ローマ字や英語名で入力しても、内蔵辞書の多言語表記群に解決される
+    from youtube_ugc.config import resolve_aliases
+    for q in ("富山", "toyama", "Toyama"):
+        al = resolve_aliases(q)
+        assert "富山" in al and "Toyama" in al and "도야마" in al
+
+
+# ---- Wikidata 自動取得（任意の観光地対応・ネット非依存の単体検証） --------
+def test_wikidata_normalize_strips_admin_suffixes():
+    from youtube_ugc.place_names import _normalize
+    out = _normalize(["Toyama Prefecture", "富山県", "Beppu (Oita)"])
+    # 接尾辞・括弧を除いた「核」も併せて生成される
+    assert "Toyama" in out and "富山" in out and "Beppu" in out
+    # 元の表記も保持
+    assert "Toyama Prefecture" in out
+
+def test_wikidata_normalize_keeps_place_when_suffix_is_part_of_name():
+    # 「別府」「甲府」などは「府」を削って1文字にしてはいけない
+    from youtube_ugc.place_names import _normalize
+    out = _normalize(["別府", "甲府"])
+    assert out == ["別府", "甲府"]
+    assert "別" not in out and "甲" not in out
+
+def test_wikidata_normalize_strips_ko_th_admin_terms():
+    # 韓国語「부」(府)・タイ語「จังหวัด」(県)を落として市レベルの核も得る
+    from youtube_ugc.place_names import _normalize
+    out = _normalize(["교토부", "จังหวัดเกียวโต"])
+    assert "교토" in out and "เกียวโต" in out
+
+def test_wikidata_selects_entity_richest_in_target_languages():
+    # 候補2件のうち、中韓タイのラベルが揃っている方を選ぶ
+    from youtube_ugc.place_names import _select_best_labels, _label_values
+    entities = {
+        "Q1": {"labels": {"ja": {"value": "別府"}, "en": {"value": "Beppu"}}},  # 日英のみ
+        "Q2": {"labels": {                                                        # 多言語あり
+            "ja": {"value": "別府市"}, "en": {"value": "Beppu"},
+            "zh": {"value": "別府市"}, "ko": {"value": "벳푸시"}, "th": {"value": "เบ็ปปุ"},
+        }},
+    }
+    best = _select_best_labels(entities, order=["Q1", "Q2"])
+    vals = _label_values(best)
+    assert "벳푸시" in vals and "เบ็ปปุ" in vals  # 多言語項目(Q2)が選ばれる
+
+def test_wikidata_fetch_is_graceful_offline():
+    # ネット不通でも例外を投げず list を返す（フォールバック）
+    from youtube_ugc.place_names import fetch_aliases
+    result = fetch_aliases("存在しない観光地XYZ", use_cache=False)
+    assert isinstance(result, list)
+
+def test_alias_filter_lets_foreign_video_through():
+    # 日本語名「高山」を含まない英語動画は、別表記 Takayama で初めて通る
+    en = mk(title="TAKAYAMA Food Tour", desc="best trip", tags=["Takayama"])
+    assert is_relevant(en, ["高山"]) is False              # 日本語名のみ→取りこぼす
+    assert is_relevant(en, ["高山", "Takayama"]) is True   # 多言語表記→拾える
+
+def test_config_no_aliases_uses_place_only():
+    from youtube_ugc.config import CollectConfig
+    assert CollectConfig(place="高山", use_aliases=False).resolved_aliases() == ["高山"]
+    assert "Takayama" in CollectConfig(place="高山").resolved_aliases()

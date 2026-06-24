@@ -5,7 +5,8 @@
     "channel_id": "c_ja1", "channel_title": "たびぐるめ日本", "published_at": "2025-10-18T09:00:00Z",
     "duration_seconds": 480, "view_count": 152000, "like_count": 5400, "comment_count": 620,
     "tags": ["高山", "飛騨高山", "グルメ", "飛騨牛"], "channel_country": "JP",
-    "subscriber_count": 210000, "subscriber_hidden": false
+    "subscriber_count": 210000, "subscriber_hidden": false,
+    "comments": ["飛騨牛美味しそう！絶対行きます", "The Hida beef looks amazing, adding Takayama to my Japan trip!", "好想去高山吃飛驒牛", "朝市が混みすぎてて大変だった", "Beautiful old town, I love it"]
   },
   {
     "video_id": "s02", "title": "高山温泉旅館に泊まってみた｜露天風呂と飛騨牛会席",
@@ -13,7 +14,8 @@
     "channel_id": "c_ja2", "channel_title": "宿ログ", "published_at": "2025-11-05T10:00:00Z",
     "duration_seconds": 720, "view_count": 88000, "like_count": 2100, "comment_count": 240,
     "tags": ["高山", "温泉", "旅館"], "channel_country": "JP",
-    "subscriber_count": 64000, "subscriber_hidden": false
+    "subscriber_count": 64000, "subscriber_hidden": false,
+    "comments": ["露天風呂最高でした", "Looks so relaxing, I want to stay here", "値得一去", "旅館が高いけど価値ありそう", "予約が取れなかったのが残念"]
   },
   {
     "video_id": "s03", "title": "高山祭を見に行った！屋台と伝統文化",
@@ -29,7 +31,8 @@
     "channel_id": "c_ja4", "channel_title": "さんぽ日和", "published_at": "2026-02-20T07:00:00Z",
     "duration_seconds": 55, "view_count": 220000, "like_count": 9800, "comment_count": 430,
     "tags": ["高山", "古い町並み", "カフェ", "shorts"], "channel_country": "JP",
-    "subscriber_count": 510000, "subscriber_hidden": false
+    "subscriber_count": 510000, "subscriber_hidden": false,
+    "comments": ["雰囲気がいいですね", "So aesthetic, I need to visit Takayama", "好漂亮的老街", "멋지다 가고 싶어요", "ちょっと人が多すぎかな"]
   },
   {
     "video_id": "s05", "title": "飛騨高山 日帰りモデルコース｜観光のおすすめ",
@@ -45,7 +48,8 @@
     "channel_id": "c_ja6", "channel_title": "ぐるめ旅", "published_at": "2025-10-30T11:00:00Z",
     "duration_seconds": 58, "view_count": 305000, "like_count": 14200, "comment_count": 780,
     "tags": ["高山", "ラーメン", "グルメ", "shorts"], "channel_country": "JP",
-    "subscriber_count": 690000, "subscriber_hidden": false
+    "subscriber_count": 690000, "subscriber_hidden": false,
+    "comments": ["高山ラーメン食べたい", "That ramen looks so good", "拉麵看起來好好吃", "맛있겠다", "観光地価格で高いのが難点"]
   },
   {
     "video_id": "s07", "title": "雪の高山と白川郷｜冬の絶景ドライブ",
@@ -65,43 +69,44 @@
   },
 
   {
-    "video_id": "s09", "title": "TAKAYAMA Japan Street Food Tour | Hida Beef in 高山",
-    "description": "Amazing food tour in Takayama (高山). The Hida beef sushi was incredible! Autumn leaves were beautiful.",
+    "video_id": "s09", "title": "TAKAYAMA Japan Street Food Tour | Hida Beef",
+    "description": "Amazing food tour in Takayama. The Hida beef sushi was incredible and the autumn leaves were beautiful.",
     "channel_id": "c_en1", "channel_title": "EatTravelJapan", "published_at": "2025-10-25T12:00:00Z",
     "duration_seconds": 620, "view_count": 410000, "like_count": 19800, "comment_count": 1450,
-    "tags": ["高山", "Takayama", "food", "Hida beef"], "channel_country": "US",
-    "subscriber_count": 980000, "subscriber_hidden": false
+    "tags": ["Takayama", "food", "Hida beef"], "channel_country": "US",
+    "subscriber_count": 980000, "subscriber_hidden": false,
+    "comments": ["This made me so hungry!", "Going next month, thanks for the guide", "Hida beef is the best", "อยากไปกินจัง", "A bit touristy but still great"]
   },
   {
-    "video_id": "s10", "title": "Best Onsen Ryokan in Takayama (高山) | Japan Travel Guide",
-    "description": "We stayed at a traditional ryokan with hot spring (onsen) in Takayama 高山.",
+    "video_id": "s10", "title": "Best Onsen Ryokan in Takayama | Japan Travel Guide",
+    "description": "We stayed at a traditional ryokan with a hot spring onsen in Takayama. The best trip.",
     "channel_id": "c_en2", "channel_title": "Wander Nippon", "published_at": "2025-11-15T12:00:00Z",
     "duration_seconds": 700, "view_count": 260000, "like_count": 11200, "comment_count": 880,
-    "tags": ["高山", "Takayama", "onsen", "ryokan", "travel"], "channel_country": "GB",
+    "tags": ["Takayama", "onsen", "ryokan", "travel"], "channel_country": "GB",
     "subscriber_count": 430000, "subscriber_hidden": false
   },
   {
-    "video_id": "s11", "title": "Takayama Autumn Scenery 高山 | Nature & Old Town",
-    "description": "The autumn nature and old town view in Takayama 高山 is breathtaking.",
+    "video_id": "s11", "title": "Takayama Autumn Scenery | Nature & Old Town",
+    "description": "The autumn nature and old town view in Takayama is breathtaking.",
     "channel_id": "c_en3", "channel_title": "Scenic Japan", "published_at": "2025-10-10T12:00:00Z",
     "duration_seconds": 240, "view_count": 175000, "like_count": 8300, "comment_count": 410,
-    "tags": ["高山", "Takayama", "nature", "autumn", "scenery"], "channel_country": "US",
+    "tags": ["Takayama", "nature", "autumn", "scenery"], "channel_country": "US",
     "subscriber_count": 300000, "subscriber_hidden": false
   },
   {
-    "video_id": "s12", "title": "Takayama 高山 Day Trip | What to eat and see",
-    "description": "Travel guide for Takayama 高山. Best food and things to do.",
+    "video_id": "s12", "title": "Takayama Day Trip | What to eat and see, best guide",
+    "description": "Travel guide for Takayama. The best food and things to do on this trip.",
     "channel_id": "c_en4", "channel_title": "Tokyo Lens Lite", "published_at": "2026-03-08T12:00:00Z",
     "duration_seconds": 540, "view_count": 95000, "like_count": 3600, "comment_count": 290,
-    "tags": ["高山", "Takayama", "travel", "guide"], "channel_country": null,
+    "tags": ["Takayama", "travel", "guide"], "channel_country": null,
     "subscriber_count": 150000, "subscriber_hidden": false
   },
   {
-    "video_id": "s13", "title": "Hida Takayama 高山 Cycling & Hiking experience",
-    "description": "Cycling and hiking experience around Takayama 高山.",
+    "video_id": "s13", "title": "Hida Takayama Cycling & Hiking experience",
+    "description": "Cycling and hiking experience around Takayama with the best nature views.",
     "channel_id": "c_en5", "channel_title": "ActiveJapan", "published_at": "2025-08-19T12:00:00Z",
     "duration_seconds": 480, "view_count": 28000, "like_count": 900, "comment_count": 70,
-    "tags": ["高山", "Takayama", "cycling", "hiking", "experience"], "channel_country": "AU",
+    "tags": ["Takayama", "cycling", "hiking", "experience"], "channel_country": "AU",
     "subscriber_count": 60000, "subscriber_hidden": false
   },
 
@@ -111,7 +116,8 @@
     "channel_id": "c_zh1", "channel_title": "日本美食旅遊", "published_at": "2025-11-02T12:00:00Z",
     "duration_seconds": 560, "view_count": 330000, "like_count": 16800, "comment_count": 1320,
     "tags": ["高山", "美食", "飛驒牛", "旅遊"], "channel_country": "TW",
-    "subscriber_count": 720000, "subscriber_hidden": false
+    "subscriber_count": 720000, "subscriber_hidden": false,
+    "comments": ["太想去了", "飛驒牛必吃", "看起來好好吃", "I want to try this so bad", "人太多了有點可惜"]
   },
   {
     "video_id": "s15", "title": "高山溫泉旅館住宿體驗｜超讚露天溫泉",
@@ -147,53 +153,54 @@
   },
 
   {
-    "video_id": "s19", "title": "다카야마 高山 맛집 투어｜히다규 꼭 먹어보세요",
-    "description": "다카야마(高山) 맛집 투어! 히다규 음식이 최고였어요.",
+    "video_id": "s19", "title": "다카야마 맛집 투어｜히다규 꼭 먹어보세요",
+    "description": "다카야마 맛집 투어! 히다규 음식이 최고였어요.",
     "channel_id": "c_ko1", "channel_title": "일본여행기록", "published_at": "2025-10-22T12:00:00Z",
     "duration_seconds": 520, "view_count": 140000, "like_count": 6100, "comment_count": 520,
-    "tags": ["高山", "다카야마", "맛집", "음식"], "channel_country": "KR",
-    "subscriber_count": 260000, "subscriber_hidden": false
+    "tags": ["다카야마", "맛집", "음식"], "channel_country": "KR",
+    "subscriber_count": 260000, "subscriber_hidden": false,
+    "comments": ["히다규 진짜 맛있어 보여요", "가고 싶다", "Looks delicious!", "好想吃", "줄이 너무 길었어요"]
   },
   {
-    "video_id": "s20", "title": "다카야마 高山 온천 료칸 후기",
-    "description": "다카야마(高山) 온천 료칸 숙박 후기입니다.",
+    "video_id": "s20", "title": "다카야마 온천 료칸 후기",
+    "description": "다카야마 온천 료칸 숙박 후기입니다.",
     "channel_id": "c_ko2", "channel_title": "온천여행", "published_at": "2025-12-14T12:00:00Z",
     "duration_seconds": 600, "view_count": 72000, "like_count": 2600, "comment_count": 210,
-    "tags": ["高山", "온천", "료칸"], "channel_country": "KR",
+    "tags": ["다카야마", "온천", "료칸"], "channel_country": "KR",
     "subscriber_count": 110000, "subscriber_hidden": false
   },
   {
-    "video_id": "s21", "title": "다카야마 高山 옛거리 산책과 축제",
-    "description": "다카야마(高山) 옛거리 산책과 전통 축제 구경.",
+    "video_id": "s21", "title": "다카야마 옛거리 산책과 축제",
+    "description": "다카야마 옛거리 산책과 전통 축제 구경.",
     "channel_id": "c_ko3", "channel_title": "느린여행", "published_at": "2025-04-16T12:00:00Z",
     "duration_seconds": 460, "view_count": 30000, "like_count": 820, "comment_count": 60,
-    "tags": ["高山", "축제", "옛거리"], "channel_country": "KR",
+    "tags": ["다카야마", "축제", "옛거리"], "channel_country": "KR",
     "subscriber_count": 45000, "subscriber_hidden": false
   },
 
   {
-    "video_id": "s22", "title": "เที่ยวทาคายามะ 高山 ｜ของกินอร่อยมาก",
-    "description": "เที่ยวทาคายามะ (高山) อาหารอร่อยมาก เนื้อฮิดะต้องลอง",
+    "video_id": "s22", "title": "เที่ยวทาคายามะ｜ของกินอร่อยมาก",
+    "description": "เที่ยวทาคายามะ อาหารอร่อยมาก เนื้อฮิดะต้องลอง",
     "channel_id": "c_th1", "channel_title": "เที่ยวญี่ปุ่น", "published_at": "2025-11-20T12:00:00Z",
     "duration_seconds": 540, "view_count": 88000, "like_count": 3400, "comment_count": 290,
-    "tags": ["高山", "ทาคายามะ", "อาหาร"], "channel_country": "TH",
+    "tags": ["ทาคายามะ", "อาหาร"], "channel_country": "TH",
     "subscriber_count": 170000, "subscriber_hidden": false
   },
   {
-    "video_id": "s23", "title": "ทาคายามะ 高山 ออนเซนและธรรมชาติ",
-    "description": "ทาคายามะ (高山) ออนเซนและธรรมชาติสวยมาก",
+    "video_id": "s23", "title": "ทาคายามะ ออนเซนและธรรมชาติ",
+    "description": "ทาคายามะ ออนเซนและธรรมชาติสวยมาก",
     "channel_id": "c_th2", "channel_title": "ธรรมชาติทริป", "published_at": "2026-01-28T12:00:00Z",
     "duration_seconds": 360, "view_count": 36000, "like_count": 980, "comment_count": 80,
-    "tags": ["高山", "ออนเซน", "ธรรมชาติ"], "channel_country": "TH",
+    "tags": ["ทาคายามะ", "ออนเซน", "ธรรมชาติ"], "channel_country": "TH",
     "subscriber_count": 58000, "subscriber_hidden": false
   },
 
   {
-    "video_id": "s24", "title": "Takayama 高山 | Guía de viaje y comida japonesa",
-    "description": "El mejor viaje a Takayama 高山. La comida y el viaje fueron increibles.",
+    "video_id": "s24", "title": "Takayama | Guia de viaje y comida japonesa",
+    "description": "El mejor viaje a Takayama. La comida y el viaje fueron increibles.",
     "channel_id": "c_es1", "channel_title": "Japon en Espanol", "published_at": "2025-09-26T12:00:00Z",
     "duration_seconds": 500, "view_count": 47000, "like_count": 1600, "comment_count": 140,
-    "tags": ["高山", "Takayama", "viaje", "comida"], "channel_country": "ES",
+    "tags": ["Takayama", "viaje", "comida"], "channel_country": "ES",
     "subscriber_count": 90000, "subscriber_hidden": false
   }
 ]

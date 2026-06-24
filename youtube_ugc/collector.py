@@ -23,16 +23,19 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 _API = "https://www.googleapis.com/youtube/v3"
 
 
-# ---- 関連度フィルタ（要件 6.3） --------------------------------------------
-def is_relevant(video: Video, place: str) -> bool:
-    """地名がタイトル/説明文/タグに含まれるかで無関係動画を足切りする。"""
-    place_low = place.lower()
+# ---- 関連度フィルタ（要件 6.3 / インバウンド対応） -------------------------
+def is_relevant(video: Video, aliases: list[str]) -> bool:
+    """地名のいずれかの表記がタイトル/説明文/タグに含まれれば通す。
+
+    日本語名だけでなく多言語表記（Takayama, 다카야마 等）で照合することで、
+    訪日客の外国語UGCを取りこぼさない。
+    """
     haystack = f"{video.title} {video.description} {' '.join(video.tags)}".lower()
-    return place_low in haystack
+    return any(a.lower() in haystack for a in aliases)
 
 
-def filter_relevant(videos: Iterable[Video], place: str) -> list[Video]:
-    return [v for v in videos if is_relevant(v, place)]
+def filter_relevant(videos: Iterable[Video], aliases: list[str]) -> list[Video]:
+    return [v for v in videos if is_relevant(v, aliases)]
 
 
 # ---- ISO8601 duration パース ------------------------------------------------
@@ -58,7 +61,7 @@ class SampleCollector:
         path = self.data_dir / "sample_videos.json"
         raw = json.loads(path.read_text(encoding="utf-8"))
         videos = [Video.from_dict(d) for d in raw]
-        videos = filter_relevant(videos, config.place)
+        videos = filter_relevant(videos, config.resolved_aliases())
         return videos[: config.max_videos]
 
 
@@ -82,9 +85,12 @@ class YouTubeCollector:
             return json.loads(resp.read().decode("utf-8"))
 
     def _build_query(self, config: CollectConfig) -> str:
-        # 地名＋カテゴリ語（要件 6.3）。OR 検索でカテゴリ語の網羅を上げる。
+        # 地名（多言語表記をOR）＋カテゴリ語（OR）。
+        # 例: (高山 | Takayama | 다카야마 | ...) (観光 | travel | ...)
+        # 日本語名のみだと日本語コンテンツに偏るため、各市場の表記を併記する。
+        names = " | ".join(config.resolved_aliases())
         terms = " | ".join(config.category_terms)
-        return f"{config.place} ({terms})"
+        return f"({names}) ({terms})"
 
     def _search_ids(self, config: CollectConfig) -> list[str]:
         after = (datetime.now(timezone.utc) - timedelta(days=30 * config.months_back)).isoformat()
@@ -156,7 +162,29 @@ class YouTubeCollector:
                                   else int(ch_st.get("subscriberCount", 0)) or None),
                 subscriber_hidden=bool(ch_st.get("hiddenSubscriberCount")),
             ))
-        return filter_relevant(videos, config.place)[: config.max_videos]
+        videos = filter_relevant(videos, config.resolved_aliases())[: config.max_videos]
+        if config.fetch_comments:
+            for v in videos:
+                v.comments = self._fetch_comments(v.video_id, config.max_comments)
+        return videos
+
+    def _fetch_comments(self, video_id: str, max_comments: int) -> list[str]:
+        """上位コメントを取得（コメント無効動画などは静かにスキップ）。"""
+        try:
+            data = self._get("commentThreads", {
+                "part": "snippet", "videoId": video_id,
+                "maxResults": min(100, max_comments), "order": "relevance",
+                "textFormat": "plainText",
+            })
+        except Exception:
+            return []
+        out = []
+        for it in data.get("items", []):
+            sn = it.get("snippet", {}).get("topLevelComment", {}).get("snippet", {})
+            text = sn.get("textDisplay")
+            if text:
+                out.append(text)
+        return out[:max_comments]
 
 
 def get_collector(config: CollectConfig, force_sample: bool = False):

@@ -34,11 +34,16 @@ class Video:
     subscriber_count: Optional[int] = None
     subscriber_hidden: bool = False  # 登録者数を非公開にしている場合 True
 
+    # コメント（視聴者側の分析に使用）。本文テキストのみを少数保持する。
+    comments: list[str] = field(default_factory=list)
+
     # 分析で付与される派生値（pipelineで設定）
     language: Optional[str] = None      # 判定言語コード (ja/en/zh/ko/th/other)
     region: Optional[str] = None        # 推定地域（国コード or "unknown"）
     region_confidence: str = "unknown"  # "declared" | "unknown"
     topics: list[str] = field(default_factory=list)
+    viewer_languages: dict = field(default_factory=dict)  # コメント言語の構成 {lang: 件数}
+    sentiment: Optional[str] = None     # "positive" | "negative" | "neutral" | None
 
     # ---- 計算プロパティ -------------------------------------------------
     @property

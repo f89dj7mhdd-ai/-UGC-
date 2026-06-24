@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>観光UGC分析 — UIイメージ（たたき台）</title>
+<style>
+  :root { --navy:#1F4E66; --teal:#2E6E8E; --bg:#F4F7F9; --line:#D6E0E6; }
+  * { box-sizing:border-box; }
+  body { font-family:"Yu Gothic","Hiragino Sans",sans-serif; margin:0; background:var(--bg); color:#223; }
+  .banner { background:#FFF6E5; color:#6b5300; font-size:12.5px; text-align:center; padding:6px; border-bottom:1px solid #F0D9A8; }
+  header { background:var(--navy); color:#fff; padding:18px 24px; }
+  header h1 { margin:0; font-size:19px; }
+  header p { margin:4px 0 0; font-size:12.5px; color:#bcd4e0; }
+  .wrap { max-width:1040px; margin:0 auto; padding:22px 20px 60px; }
+  .panel { background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin-bottom:18px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+  .searchrow { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .searchrow input { flex:1; min-width:220px; padding:11px 14px; border:1.5px solid var(--line); border-radius:8px; font-size:15px; }
+  .btn { background:var(--navy); color:#fff; border:none; border-radius:8px; padding:11px 20px; font-size:14px; cursor:pointer; }
+  .label { font-size:12.5px; color:#567; margin:14px 0 6px; font-weight:600; }
+  .chips { display:flex; gap:8px; flex-wrap:wrap; }
+  .chip { border:1.5px solid var(--teal); color:var(--teal); border-radius:20px; padding:5px 14px; font-size:13px; cursor:pointer; user-select:none; }
+  .chip.on { background:var(--teal); color:#fff; }
+  .cards { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  .card { background:#F2F6F8; border-radius:10px; padding:14px 16px; }
+  .card .k { font-size:11.5px; color:#567; }
+  .card .v { font-size:23px; font-weight:bold; color:var(--navy); margin-top:2px; }
+  .card .d { font-size:11px; color:#3a8; margin-top:2px; }
+  h2 { color:var(--navy); font-size:16px; border-left:5px solid var(--teal); padding-left:10px; margin:6px 0 12px; }
+  table { border-collapse:collapse; width:100%; font-size:13.5px; }
+  th,td { border-bottom:1px solid var(--line); padding:8px 8px; text-align:left; }
+  th { color:#567; font-weight:600; font-size:12px; }
+  td.num { text-align:right; }
+  .bar { height:16px; border-radius:4px; background:var(--teal); display:inline-block; vertical-align:middle; }
+  .bar-bg { background:#E8EEF2; border-radius:4px; width:140px; display:inline-block; }
+  .flag { background:#FFE0B2; color:#8A5A00; font-size:10.5px; padding:1px 7px; border-radius:8px; }
+  .pat { display:flex; gap:10px; flex-wrap:wrap; }
+  .pat .item { background:#EAF3F7; border:1px solid #CFE3EC; border-radius:8px; padding:8px 12px; font-size:13px; }
+  .pat .lift { color:#C0392B; font-weight:bold; }
+  .insight { background:#E8F2E8; border-left:5px solid #2E7D32; border-radius:8px; padding:10px 14px; font-size:13.5px; }
+  .insight li { margin:5px 0; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  @media(max-width:760px){ .cards{grid-template-columns:repeat(2,1fr);} .two{grid-template-columns:1fr;} }
+  .note { font-size:11.5px; color:#789; margin-top:6px; }
+</style></head>
+<body>
+<div class="banner">これは将来のWeb UIの<b>イメージ（たたき台）</b>です。実データは表示しません。現行の動くプロトタイプはCLI＋HTMLレポートです。</div>
+
+<header>
+  <h1>観光UGC分析ダッシュボード</h1>
+  <p>地方自治体向け インバウンド誘致 意思決定支援ツール（コンセプト画面）</p>
+</header>
+
+<div class="wrap">
+
+  <div class="panel">
+    <div class="searchrow">
+      <input value="高山" placeholder="観光地名を入力（例：高山）">
+      <button class="btn">分析する</button>
+    </div>
+    <div class="label">ターゲット市場（言語）を選択</div>
+    <div class="chips">
+      <span class="chip on">中国語圏</span><span class="chip on">英語圏</span>
+      <span class="chip">韓国語圏</span><span class="chip">タイ語圏</span><span class="chip">日本語圏</span>
+    </div>
+    <div class="label">収集期間</div>
+    <div class="chips">
+      <span class="chip on">直近12ヶ月</span><span class="chip">6ヶ月</span><span class="chip">全期間</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>現状サマリ：高山</h2>
+    <div class="cards">
+      <div class="card"><div class="k">収集動画数</div><div class="v">24</div></div>
+      <div class="card"><div class="k">総再生数</div><div class="v">3.28M</div></div>
+      <div class="card"><div class="k">平均エンゲージメント</div><div class="v">6,402</div></div>
+      <div class="card"><div class="k">平均エンゲージ率</div><div class="v">2.44%</div><div class="d">▲ 率算出 23/24件</div></div>
+    </div>
+    <p class="note">エンゲージメント＝いいね＋コメント。率＝÷登録者数（非公開チャンネルは除外）。</p>
+  </div>
+
+  <div class="two">
+    <div class="panel">
+      <h2>市場別の反応（言語＝主軸）</h2>
+      <table>
+        <tr><th>市場</th><th>件数</th><th>平均エンゲージメント</th><th>主な話題</th></tr>
+        <tr><td>中国語圏</td><td class="num">5</td><td><span class="bar-bg"><span class="bar" style="width:140px"></span></span> 10,520</td><td>食・自然</td></tr>
+        <tr><td>英語圏</td><td class="num">5</td><td><span class="bar-bg"><span class="bar" style="width:125px"></span></span> 9,380</td><td>食・温泉</td></tr>
+        <tr><td>韓国語圏</td><td class="num">3</td><td><span class="bar-bg"><span class="bar" style="width:46px"></span></span> 3,437</td><td>食・温泉</td></tr>
+        <tr><td>タイ語圏 <span class="flag">参考値</span></td><td class="num">2</td><td><span class="bar-bg"><span class="bar" style="width:32px"></span></span> 2,375</td><td>食・自然</td></tr>
+      </table>
+      <p class="note">少数セルは参考値。地域軸（自己申告ベースの推定）は別タブで表示。</p>
+    </div>
+
+    <div class="panel">
+      <h2>高反応パターン</h2>
+      <div class="pat">
+        <div class="item">尺：ショート(〜60秒) <span class="lift">×3.4</span></div>
+        <div class="item">言語：中国語 <span class="lift">×1.6</span></div>
+        <div class="item">話題：食・グルメ <span class="lift">×1.4</span></div>
+        <div class="item">時期：秋(9-11月) <span class="lift">×1.3</span></div>
+      </div>
+      <p class="note">上位群に偏って多い特徴を、全体比の倍率（lift）で表示。</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>人気コンテンツ（エンゲージメント上位）</h2>
+    <table>
+      <tr><th>タイトル</th><th>市場</th><th>再生数</th><th>エンゲージ</th><th>話題</th></tr>
+      <tr><td>TAKAYAMA Japan Street Food Tour | Hida Beef</td><td>英語圏</td><td class="num">410,000</td><td class="num">21,250</td><td>食・グルメ</td></tr>
+      <tr><td>高山美食之旅｜飛驒牛與古老街道</td><td>中国語圏</td><td class="num">330,000</td><td class="num">18,120</td><td>食・グルメ</td></tr>
+      <tr><td>高山ラーメンとスイーツ食べ歩き</td><td>日本語圏</td><td class="num">305,000</td><td class="num">14,980</td><td>食・グルメ</td></tr>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2>示唆と次の手がかり</h2>
+    <ul class="insight">
+      <li>反応が最も高いのは<b>中国語圏</b>（平均エンゲージメント10,520）。特に「食・自然」の動画が伸びており、優先ターゲット候補。</li>
+      <li>高反応動画は<b>ショート×食</b>に強く偏在。プロモーション素材はこの切り口を軸に。</li>
+      <li><b>秋</b>の発信が伸びやすい。紅葉シーズンに合わせた発信設計が有効。</li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+  // たたき台：チップのトグルのみ動作（分析は行いません）
+  document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => c.classList.toggle('on')));
+  document.querySelector('.btn').addEventListener('click', () =>
+    alert('UIイメージ（たたき台）です。実際の分析はCLIプロトタイプ（python -m youtube_ugc.cli）で動作します。'));
+</script>
+</body></html>

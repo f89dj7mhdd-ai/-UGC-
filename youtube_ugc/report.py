@@ -80,6 +80,52 @@ def _findings_html(findings) -> str:
     )
 
 
+def _viewer_sentiment_html(result: AnalysisResult) -> str:
+    cv = result.creator_vs_viewer or {}
+    creator = cv.get("creator", {})
+    viewer = cv.get("viewer", {})
+    if not viewer:
+        return ('<p class="note">コメントが取得できなかったため、視聴者層・感情分析はスキップしました'
+                '（サンプル/コメント無効動画など）。</p>')
+    keys = sorted(set(creator) | set(viewer),
+                  key=lambda k: viewer.get(k, 0) + creator.get(k, 0), reverse=True)
+    c_total = sum(creator.values()) or 1
+    v_total = sum(viewer.values()) or 1
+    rows = []
+    for k in keys:
+        label = LANGUAGE_TO_MARKET.get(k, k)
+        c, v = creator.get(k, 0), viewer.get(k, 0)
+        rows.append(
+            f"<tr><td>{_esc(label)}</td>"
+            f"<td class='num'>{c}（{c/c_total:.0%}）</td>"
+            f"<td class='num'>{v}（{v/v_total:.0%}）</td></tr>"
+        )
+    table = (
+        "<h3>発信者言語 × 視聴者言語（コメント）</h3>"
+        "<table><thead><tr><th>市場</th><th>発信者（動画数）</th>"
+        "<th>視聴者（コメント数）</th></tr></thead>"
+        f"<tbody>{''.join(rows)}</tbody></table>"
+        '<p class="note">視聴者属性はAPI非開示のため、コメントの言語を視聴者側の代理指標としています。</p>'
+    )
+
+    ss = result.sentiment or {}
+    sent = ""
+    if ss.get("rated"):
+        pr = ss.get("positive_ratio")
+        pr_s = "—" if pr is None else f"{pr*100:.0f}%"
+        sent = (
+            '<div class="cards">'
+            f'<div class="card"><div class="k">ポジティブ率</div><div class="v">{pr_s}</div></div>'
+            f'<div class="card"><div class="k">ポジ</div><div class="v">{ss.get("positive",0)}</div></div>'
+            f'<div class="card"><div class="k">ネガ</div><div class="v">{ss.get("negative",0)}</div></div>'
+            f'<div class="card"><div class="k">中立</div><div class="v">{ss.get("neutral",0)}</div></div>'
+            "</div>"
+            f'<p class="note">感情判定: {_esc(result.llm_provider)}（LLMが無い場合は多言語辞書）。'
+            "ネガティブは混雑・価格などの懸念を含む可能性があり、要因確認の起点になります。</p>"
+        )
+    return table + sent
+
+
 def render(result: AnalysisResult) -> str:
     s = result.summary
     src_label = "サンプルデータ" if result.source == "sample" else "YouTube Data API"
@@ -135,6 +181,7 @@ def render(result: AnalysisResult) -> str:
 <h1>観光UGC分析レポート</h1>
 <p class="meta">対象観光地：<b>{_esc(result.place)}</b>　/　データ源：{src_label}　/
 収集期間：直近{result.config.months_back}ヶ月　/　生成日時：{datetime.now():%Y-%m-%d %H:%M}</p>
+<p class="meta">検索表記（多言語）：{_esc(' / '.join(result.config.resolved_aliases()))}</p>
 
 <h2>1. 現状サマリ</h2>
 <div class="cards">
@@ -156,16 +203,19 @@ def render(result: AnalysisResult) -> str:
 <table><thead><tr><th>言語</th><th>推定地域</th><th>件数</th><th>平均エンゲージメント</th><th>信頼度</th></tr></thead>
 <tbody>{matrix_rows}</tbody></table>
 
-<h2>3. 人気コンテンツ（エンゲージメント上位）</h2>
+<h2>3. 視聴者層と感情（コメント分析）</h2>
+{_viewer_sentiment_html(result)}
+
+<h2>4. 人気コンテンツ（エンゲージメント上位）</h2>
 <table><thead><tr><th>タイトル</th><th>言語/地域</th><th>再生数</th><th>エンゲージ</th>
 {'<th>エンゲージ率</th>' if show_rate else ''}<th>話題</th></tr></thead>
 <tbody>{_video_rows(result.top_by_engagement, show_rate)}</tbody></table>
 
-<h2>4. 高反応パターン</h2>
-<p class="note">エンゲージメント上位群に偏って多い特徴（再現すべき訴求要素の候補）。</p>
+<h2>5. 高反応パターン</h2>
+<p class="note">エンゲージメント上位群に偏って多い特徴（再現すべき訴求要素の候補）。話題分類: {_esc(result.llm_provider)}。</p>
 {_findings_html(result.findings)}
 
-<h2>5. 示唆と次の手がかり</h2>
+<h2>6. 示唆と次の手がかり</h2>
 <ul class="insights">{insights}</ul>
 
 <div class="disclaimer">

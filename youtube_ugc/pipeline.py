@@ -8,18 +8,28 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Sequence
 
+from . import comments as comments_mod
 from . import detect, metrics, patterns, segment
 from .config import CollectConfig, LANGUAGE_TO_MARKET
 from .models import Video
-from .topics import classify_topics
+from .topics import classify_batch
 
 
-def annotate(videos: Sequence[Video]) -> list[Video]:
-    """各動画に言語・地域・話題を付与する（要件 6.4 / 9）。"""
+def annotate(videos: Sequence[Video], use_llm: bool = True) -> list[Video]:
+    """各動画に言語・地域・話題・視聴者言語・感情を付与する（要件 6.4 / 9）。"""
     for v in videos:
         v.language = detect.detect_language(v.title, v.description)
         v.region, v.region_confidence = detect.detect_region(v.channel_country)
-        v.topics = classify_topics(f"{v.title} {v.description} {' '.join(v.tags)}")
+
+    # 話題分類は一括（LLMがあれば表現揺れを吸収、無ければキーワード）
+    items = [(v.video_id, f"{v.title} {v.description} {' '.join(v.tags)}") for v in videos]
+    topic_map = classify_batch(items, use_llm=use_llm)
+    for v in videos:
+        v.topics = topic_map.get(v.video_id, [])
+
+    # コメントから視聴者言語・感情を付与
+    comments_mod.annotate_viewer_languages(videos)
+    comments_mod.annotate_sentiment(videos, use_llm=use_llm)
     return list(videos)
 
 
@@ -56,6 +66,28 @@ def build_insights(videos, lang_segments, findings) -> list[str]:
             f = hit[0]
             insights.append(f"{lead}は「{f.value}」が高反応群に偏在（全体比{f.lift:.1f}倍）。発信設計の参考にできます。")
 
+    # 発信者 vs 視聴者の言語ギャップ（コメント由来）
+    cv = comments_mod.creator_vs_viewer(videos)
+    viewer = cv["viewer"]
+    if viewer:
+        foreign_viewer = sum(n for lg, n in viewer.items() if lg not in ("ja", "other"))
+        total_viewer = sum(viewer.values())
+        if total_viewer and foreign_viewer / total_viewer >= 0.3:
+            insights.append(
+                f"コメントの{foreign_viewer/total_viewer:.0%}が外国語で、発信者構成以上に海外の視聴者の関心が高い可能性があります。"
+                "発信が日本語中心でも、海外視聴者向けの多言語化（字幕・概要）が効きそうです。"
+            )
+
+    # 感情
+    ss = comments_mod.sentiment_summary(videos)
+    if ss["rated"]:
+        if ss["positive_ratio"] is not None:
+            insights.append(
+                f"コメントの感情はポジティブが{ss['positive_ratio']:.0%}（{ss['rated']}件中）。"
+                + (f"ネガティブ{ss['negative']}件は混雑・価格などの懸念を含む可能性があり、要因の確認に値します。"
+                   if ss["negative"] else "全体に好意的です。")
+            )
+
     # データ留意
     unknown = sum(1 for v in videos if v.region == "unknown")
     if unknown:
@@ -81,14 +113,20 @@ class AnalysisResult:
     insights: list[str]
     config: CollectConfig
     language_composition: dict = field(default_factory=dict)
+    viewer_languages: dict = field(default_factory=dict)
+    creator_vs_viewer: dict = field(default_factory=dict)
+    sentiment: dict = field(default_factory=dict)
+    llm_provider: str = "none"
 
 
 def run(config: CollectConfig, collector) -> AnalysisResult:
+    from . import llm
     raw = collector.collect(config)
-    videos = annotate(raw)
+    videos = annotate(raw, use_llm=config.use_llm)
 
     lang_segments = segment.by_language(videos)
     composition = {s.key: s.count for s in lang_segments}
+    findings = patterns.extract(videos)
 
     return AnalysisResult(
         place=config.place,
@@ -101,8 +139,12 @@ def run(config: CollectConfig, collector) -> AnalysisResult:
         market_segments=segment.by_market(videos),
         region_segments=segment.by_region(videos),
         matrix=segment.language_region_matrix(videos),
-        findings=patterns.extract(videos),
-        insights=build_insights(videos, lang_segments, patterns.extract(videos)),
+        findings=findings,
+        insights=build_insights(videos, lang_segments, findings),
         config=config,
         language_composition=composition,
+        viewer_languages=comments_mod.viewer_language_totals(videos),
+        creator_vs_viewer=comments_mod.creator_vs_viewer(videos),
+        sentiment=comments_mod.sentiment_summary(videos),
+        llm_provider=(llm.provider_name() if config.use_llm else "off"),
     )
