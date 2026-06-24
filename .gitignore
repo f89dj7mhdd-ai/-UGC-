@@ -6,9 +6,16 @@ __pycache__/
 venv/
 .pytest_cache/
 
-# 生成物（レポートはサンプルを1つ残してもよい）
+# 生成物（実行のたびに作られるHTMLレポートはコミットしない）
+report.html
 report_*.html
+*_report.html
+# 地名キャッシュ（生成物）
+data/alias_cache.json
+
+# 企画書PDFは追跡する（git add -f 済み）。他のPDFは無視
 *.pdf
+!企画書.pdf
 
 # 環境・秘密情報（APIキーは絶対にコミットしない）
 .env

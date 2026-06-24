@@ -10,7 +10,7 @@
 |---|---|
 | **[企画書.md](企画書.md)** | ★まずこちら。着眼点・調査の取捨選択・アプローチ・工夫・実現可能性の設計 |
 | 本README + `youtube_ugc/` | 動くプロトタイプ（CLI）。下記「使い方」で即実行できます |
-| [report_takayama.html](report_takayama.html) | 出力レポートの例（ブラウザで開く） |
+| レポート出力例 | `python -m youtube_ugc.cli "高山" --sample` で生成（生成物のためリポジトリには含めません） |
 | [ui_mockup.html](ui_mockup.html) | 将来のWeb UIイメージ（たたき台） |
 | [docs/デモ説明.md](docs/デモ説明.md) | 最終面接での口頭説明トークスクリプト＋想定QA |
 | [docs/要件定義書_v0.3.docx](docs/) | 詳細な設計判断の記録（付録） |
