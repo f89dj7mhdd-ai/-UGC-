@@ -124,6 +124,11 @@ def run(config: CollectConfig, collector) -> AnalysisResult:
     raw = collector.collect(config)
     videos = annotate(raw, use_llm=config.use_llm)
 
+    # 発信言語の除外（インバウンド分析では日本語＝国内発信を外す等）
+    if config.exclude_languages:
+        ex = set(config.exclude_languages)
+        videos = [v for v in videos if (v.language or "other") not in ex]
+
     lang_segments = segment.by_language(videos)
     composition = {s.key: s.count for s in lang_segments}
     findings = patterns.extract(videos)

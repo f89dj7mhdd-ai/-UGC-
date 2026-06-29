@@ -185,6 +185,18 @@ def test_classify_batch_keyword_fallback():
     assert "温泉・宿" in out["v2"]
 
 
+# ---- インバウンド限定（日本語除外） -------------------------------------
+def test_inbound_only_excludes_japanese():
+    from youtube_ugc.config import CollectConfig
+    from youtube_ugc.collector import SampleCollector
+    from youtube_ugc.pipeline import run
+    r = run(CollectConfig(place="高山", exclude_languages=["ja"]), SampleCollector())
+    langs = {s.key for s in r.lang_segments}
+    assert "ja" not in langs               # 日本語は除外
+    assert langs & {"en", "zh", "ko", "th"}  # 海外市場は残る
+    assert all(v.language != "ja" for v in r.videos)
+
+
 # ---- 多言語の地名（インバウンド対応） -----------------------------------
 def test_resolve_aliases_known_place():
     from youtube_ugc.config import resolve_aliases

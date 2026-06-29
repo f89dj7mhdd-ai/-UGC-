@@ -37,6 +37,10 @@ def build_parser() -> argparse.ArgumentParser:
                    help="コメントを収集しない（視聴者層・感情分析を省く）")
     p.add_argument("--no-llm", action="store_true",
                    help="LLMを使わずキーワード/辞書のみで分類・感情判定")
+    p.add_argument("--inbound-only", action="store_true",
+                   help="日本語（国内発信）を分析から除外し、海外市場のUGCだけを見る")
+    p.add_argument("--exclude-lang", default=None,
+                   help="分析から除外する発信言語をカンマ区切りで指定（例: 'ja,other'）")
     p.add_argument("--out", default=None, help="出力HTMLパス。既定: report_<place>.html")
     p.add_argument("--open", action="store_true", help="生成後にブラウザで開く")
     return p
@@ -55,12 +59,19 @@ def main(argv: list[str] | None = None) -> int:
         else:
             print("[多言語名] 取得できませんでした（内蔵辞書／地名のみで続行）", file=sys.stderr)
 
+    exclude = ["ja"] if args.inbound_only else []
+    if args.exclude_lang:
+        exclude = [s.strip() for s in args.exclude_lang.split(",") if s.strip()]
+
     config = CollectConfig(
         place=args.place, months_back=args.months, max_videos=args.max_videos,
         extra_aliases=extra, use_aliases=not args.no_aliases,
         fetch_comments=not args.no_comments, use_llm=not args.no_llm,
+        exclude_languages=exclude,
     )
     print(f"[検索表記] {' / '.join(config.resolved_aliases())}", file=sys.stderr)
+    if exclude:
+        print(f"[除外言語] {' / '.join(exclude)}（分析対象から除外）", file=sys.stderr)
     if config.use_llm:
         from .llm import provider_name
         print(f"[LLM] プロバイダ: {provider_name()}（noneなら辞書/キーワードで動作）", file=sys.stderr)

@@ -80,11 +80,24 @@ def _wiki_langlinks(titles: list[str]) -> dict[str, dict]:
     return out
 
 
+# 観光地ではない記事（時代・歴史・人物・戦い等）を弾くための語。
+# 例: 「鎌倉」で『鎌倉時代』(Kamakura period) を掴むと刀剣・歴史動画に汚染される。
+_NON_PLACE_MARKERS = (
+    "時代", "period", "歴史", "history", "王朝", "dynasty", "の戦い", "battle",
+    "幕府", "shogunate", "文化", "culture", "事件", "氏", "家",
+)
+
+
+def _looks_non_place(title: str) -> bool:
+    low = title.lower()
+    return any(k.lower() in low for k in _NON_PLACE_MARKERS)
+
+
 def _wiki_aliases(place: str) -> list[str]:
     """日本語版Wikipediaの検索＋言語間リンクで多言語地名を得る。
 
     候補記事のうち、対象言語版（en/zh/ko/th）のリンクが最も揃っている記事を選ぶ。
-    都市・観光地の記事は多言語版が揃いやすく、姓などの曖昧項目を避けられる。
+    ただし「時代・歴史・人物」等の非観光地記事は除外し、都市・観光地に寄せる。
     """
     titles = _wiki_search_titles(place)
     if not titles:
@@ -92,6 +105,8 @@ def _wiki_aliases(place: str) -> list[str]:
     pages = _wiki_langlinks(titles)
     best_title, best_score, best_ll = None, -1, {}
     for t in titles:  # 検索順を同点時の優先に
+        if _looks_non_place(t) and place not in _NON_PLACE_MARKERS:
+            continue  # 時代・歴史系の記事は地名として採用しない
         ll = pages.get(t, {})
         score = sum(1 for lg in _WIKI_LANGS if lg in ll)
         if score > best_score:

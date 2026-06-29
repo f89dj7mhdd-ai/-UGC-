@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import re
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
@@ -81,36 +82,52 @@ class YouTubeCollector:
     def _get(self, endpoint: str, params: dict) -> dict:
         params = {**params, "key": self.api_key}
         url = f"{_API}/{endpoint}?{urllib.parse.urlencode(params)}"
-        with urllib.request.urlopen(url, timeout=30) as resp:  # noqa: S310
-            return json.loads(resp.read().decode("utf-8"))
+        try:
+            with urllib.request.urlopen(url, timeout=30) as resp:  # noqa: S310
+                return json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            body = e.read().decode("utf-8", "ignore")
+            raise RuntimeError(f"YouTube API {e.code} エラー（{endpoint}）: {body[:600]}") from None
 
-    def _build_query(self, config: CollectConfig) -> str:
-        # 地名（多言語表記をOR）＋カテゴリ語（OR）。
-        # 例: (高山 | Takayama | 다카야마 | ...) (観光 | travel | ...)
-        # 日本語名のみだと日本語コンテンツに偏るため、各市場の表記を併記する。
-        names = " | ".join(config.resolved_aliases())
-        terms = " | ".join(config.category_terms)
-        return f"({names}) ({terms})"
-
-    def _search_ids(self, config: CollectConfig) -> list[str]:
-        after = (datetime.now(timezone.utc) - timedelta(days=30 * config.months_back)).isoformat()
+    def _search_one(self, name: str, after: str, limit: int, seen: set[str]) -> list[str]:
+        """1つの地名表記で検索して動画IDを集める（市場別収集の1単位）。"""
         ids: list[str] = []
         token = None
-        while len(ids) < config.max_videos:
+        while len(ids) < limit:
             params = {
-                "part": "snippet", "q": self._build_query(config), "type": "video",
-                "order": "relevance", "maxResults": min(50, config.max_videos - len(ids)),
+                "part": "snippet", "q": name, "type": "video",
+                "order": "relevance", "maxResults": min(50, limit - len(ids)),
                 "publishedAfter": after,
             }
-            if config.region_hint:
-                params["regionCode"] = config.region_hint
+            if config_region := getattr(self, "_region_hint", None):
+                params["regionCode"] = config_region
             if token:
                 params["pageToken"] = token
             data = self._get("search", params)
-            ids += [it["id"]["videoId"] for it in data.get("items", []) if it["id"].get("videoId")]
+            for it in data.get("items", []):
+                vid = it["id"].get("videoId")
+                if vid and vid not in seen:
+                    seen.add(vid)
+                    ids.append(vid)
             token = data.get("nextPageToken")
             if not token:
                 break
+        return ids
+
+    def _search_ids(self, config: CollectConfig) -> list[str]:
+        # YouTube は RFC3339（末尾Z・マイクロ秒なし）を要求。isoformat()の "+00:00" だと400になる。
+        after = (datetime.now(timezone.utc) - timedelta(days=30 * config.months_back)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        self._region_hint = config.region_hint
+        # 地名の表記ごとに個別に検索してマージする（市場別収集）。
+        # 全表記を1回でOR検索すると日本語動画ばかり返り、海外市場を取りこぼすため。
+        names = config.resolved_aliases()[:8]
+        per_name = max(15, -(-config.max_videos // max(1, len(names))))  # 各表記への配分（切り上げ）
+        seen: set[str] = set()
+        ids: list[str] = []
+        for name in names:
+            if len(ids) >= config.max_videos:
+                break
+            ids += self._search_one(name, after, per_name, seen)
         return ids[: config.max_videos]
 
     def _fetch_videos(self, ids: list[str]) -> tuple[list[dict], dict[str, dict]]:

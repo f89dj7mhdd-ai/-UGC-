@@ -27,6 +27,11 @@ PLACE_ALIASES: dict[str, list[str]] = {
     "金沢": ["金沢", "Kanazawa", "かなざわ", "가나자와", "คานาซาวะ"],
     "白川郷": ["白川郷", "Shirakawago", "Shirakawa-go", "시라카와고", "ชิรากาวาโกะ"],
     "富山": ["富山", "Toyama", "とやま", "도야마", "โทยามะ"],
+    "鎌倉": ["鎌倉", "Kamakura", "かまくら", "가마쿠라", "คามากุระ"],
+    "京都": ["京都", "Kyoto", "きょうと", "교토", "เกียวโต"],
+    "奈良": ["奈良", "Nara", "なら", "나라", "นาระ"],
+    "日光": ["日光", "Nikko", "にっこう", "닛코", "นิกโก"],
+    "箱根": ["箱根", "Hakone", "はこね", "하코네", "ฮาโกเนะ"],
 }
 
 
@@ -88,6 +93,7 @@ class CollectConfig:
     fetch_comments: bool = True        # コメントを収集して視聴者層・感情を分析
     max_comments: int = 20             # 1動画あたりの取得コメント数上限
     use_llm: bool = True               # 話題分類・感情分析にLLMを使う（無ければ辞書）
+    exclude_languages: list[str] = field(default_factory=list)  # 分析から除外する発信言語（例: ["ja"]）
 
     def has_api_key(self) -> bool:
         return bool(self.api_key)
